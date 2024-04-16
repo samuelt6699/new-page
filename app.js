@@ -7,6 +7,7 @@ const clientRoutes = require("./routes/client");
 const categoryRoutes = require("./routes/catgeory");
 const productItemRoutes = require("./routes/ProductItem");
 const cartItemRoute = require('./routes/cartItem');
+const searchRoute = require('./routes/search')
 const path = require('path');
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/", clientRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/productItem", productItemRoutes);
 app.use("/api/cartItems",authenticateToken, cartItemRoute);
+app.use("/api/category", searchRoute);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
