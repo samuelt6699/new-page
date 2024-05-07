@@ -8,6 +8,7 @@ const categoryRoutes = require("./routes/catgeory");
 const productItemRoutes = require("./routes/ProductItem");
 const cartItemRoute = require('./routes/cartItem');
 const searchRoute = require('./routes/search')
+const vendorRoutes= require("./routes/vendor")
 const path = require('path');
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cors());
 
 
 app.use("/api/", clientRoutes);
+app.use('/api/vendor', vendorRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/productItem", productItemRoutes);
 app.use("/api/cartItems",authenticateToken, cartItemRoute);

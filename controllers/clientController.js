@@ -106,16 +106,7 @@ exports.login = async (req, res) => {
         phone: client.phone,
         client: client.ClientId,
       } });
-      console.log({
-        token,
-        user: {
-          firstName: client.FirstName,
-          lastName: client.LastName,
-          email: client.Email,
-          phone: client.Phone,
-          client:client.ClientId
-        }
-      });
+     
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({

@@ -10,10 +10,11 @@ router.post('/signup', clientController.signup);
 router.post('/login', clientController.login);
 
 
-//router.get('/firstName', clientController.firstName);
+
 
 // Change Password
 
+//router.post('/change_password',verifyAuth, clientController.changePassword)
 
 
 module.exports = router;
