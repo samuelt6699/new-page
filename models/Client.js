@@ -1,117 +1,56 @@
-const { knex } = require("../config/database");
+const  {connection}  = require('../config/data');
+
 
 function isEmail(string) {
   const emailRegex = /\S+@\S+\.\S+/;
   return emailRegex.test(string);
 }
+
 class Client {
-  async createNewClient(clientData) {
-    const result = await knex("ClientInfo").insert(clientData);
-    return result;
+  createNewClient(clientData) {
+    const insertQuery = 'INSERT INTO ClientInfo SET ?';
+    return new Promise((resolve, reject) => {
+      connection.query(insertQuery, clientData, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
   }
 
-  async getClientByLogin(username) {
-    const query = isEmail(username) ? { Email: username } : { Phone: username };
-    const queryString = knex("ClientInfo").where(query).first().toString();
-    console.log(queryString);
-    const client = await knex("ClientInfo").where(query).first();
-    return client;
+  getClientByLogin(username) {
+    const query = isEmail(username)
+      ? 'SELECT * FROM ClientInfo WHERE Email = ? LIMIT 1'
+      : 'SELECT * FROM ClientInfo WHERE Phone = ? LIMIT 1';
+    return new Promise((resolve, reject) => {
+      connection.query(query, [username], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.length ? results[0] : null);
+        }
+      });
+    });
   }
 
-  async getClientById(clientId) {
-    const client = await knex("ClientInfo")
-      .where({ ClientId: clientId })
-      .first();
-    return client;
+  getClientById(clientId) {
+    const query = 'SELECT * FROM ClientInfo WHERE ClientId = ? LIMIT 1';
+    return new Promise((resolve, reject) => {
+      connection.query(query, [clientId], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.length ? results[0] : null);
+        }
+      });
+    });
   }
-
-  /*
-  async getClientByEmail(email) {
-    const client = await knex("ClientInfo").where({ Email: email }).first();
-    return client;
-  }
-  async getClientByPhone(phone) {
-    const client = await knex("ClientInfo").where({ Phone: phone }).first();
-    return client;
-  }
-*/
-  /*
-    async getClientById(clientId) {
-        const client = await knex('ClientInfo').where({ ClientId: clientId }).first();
-        return client;
-    }
-    */
 }
+
+
 module.exports = {
-    Client: new Client(),
-    isEmail,
-  };
-/*
-class Client {
-    async createNewClient(clientData) {
-        try {
-<<<<<<< HEAD
-            const result = await knex('ClientInfo').insert(clientData);
-            // Knex's 'insert' resolves to an array containing the inserted record ids
-            return result;
-        } catch (error) {
-            // Handle possible errors such as duplication, bad connection, etc.
-            throw error;
-        }
-    }
-    /*async createNewClient(clientData) {
-        const result = await db.promise().query('INSERT INTO ClientInfo SET ?', clientData);
-        return result;
-
-            const result = await db('ClientInfo').insert(clientData);
-            return result;
-        } catch (error) {
-            throw error;
-        }
-
-    }
-    
-      
-   
-    
-    async getClientByUsername(username) {
-        try {
-            const client = await db('ClientInfo').where('Username', username).first();
-            return client;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async getClientByEmail(email) {
-        try {
-            const client = await db('ClientInfo').where('Email', email).first();
-            return client;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async getClientById(clientId) {
-        try {
-            const client = await db('ClientInfo').where('ClientId', clientId).first();
-            return client;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async changePassword(clientId, hashedPassword) {
-        try {
-            const result = await db('ClientInfo').where('ClientId', clientId).update({ PasswordHash: hashedPassword });
-            return result;
-        } catch (error) {
-            throw error;
-        }
-    }
-}
-
-module.exports = new Client();
-
-*/
-
+  Client: new Client(),
+  isEmail,
+};

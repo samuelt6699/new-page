@@ -1,17 +1,20 @@
-const { knex } = require("../config/database");
+const { connection } = require('../config/data');
 
 class ProductItem {
   async createProduct(productData) {
     try {
-      const result = await knex("ProductItems").insert(productData);
-      return result[0];
+      const [result] = await connection.promise().query(
+        'INSERT INTO ProductItems SET ?', productData
+      );
+      return result.insertId;
     } catch (error) {
       throw error;
     }
   }
+
   async getAllProducts() {
     try {
-      const products = await knex("ProductItems").select("*");
+      const [products] = await connection.promise().query('SELECT * FROM ProductItems');
       return products;
     } catch (error) {
       throw error;
@@ -20,72 +23,41 @@ class ProductItem {
 
   async getProductById(productId) {
     try {
-      const product = await knex("ProductItems")
-        .where("ProductId", productId)
-        .first();
-      return product;
+      const [rows] = await connection.promise().query(
+        'SELECT * FROM ProductItems WHERE ProductId = ?', [productId]
+      );
+      return rows[0] || null;
     } catch (error) {
       throw error;
     }
   }
- 
-
-
-
-    async updateProduct(productId, productData) {
-      try {
-        const result = await knex('ProductItems')
-            .where('ProductId', productId)
-            .update(productData);
-    
-        // Optionally, immediately after update, fetch and log the updated row
-        // const updatedProduct = await knex('ProductItems').where('ProductId', productId);
-    
-        return result;
-      } catch (error) {
-        console.error(`Error updating product ${productId}:`, error);
-        throw error;
-      }
-    }
   
-    mapProductDataToDbColumns(productData) {
-      return {
-          Name: productData.name,
-          Description: productData.description,
-          Price: productData.price,
-          Brand: productData.brand,
-          Model: productData.model,
-          UpdatedAt: new Date(),
-          CategoryId: productData.categoryId,
-          Image1Url: productData.image1Url,
-          Image2Url: productData.image2Url,
-          Image3Url: productData.image3Url,
-          Image4Url: productData.image4Url,
-          Image5Url: productData.image5Url,
-      };
+  async updateProduct(productId, productData) {
+    try {
+      const [result] = await connection.promise().query(
+        'UPDATE ProductItems SET ? WHERE ProductId = ?', [productData, productId]
+      );
+      return result.changedRows;
+    } catch (error) {
+      console.error(`Error updating product ${productId}:`, error);
+      throw error;
+    }
   }
 
+  // The mapProductDataToDbColumns function can remain the same, as it is a utility function unrelated to the database operation
 
-    async deleteProduct(productId) {
-        try {
-            const result = await knex('ProductItems').where('ProductId', productId).del();
-            return result;
-        } catch (error) {
-            throw error;
-        }
+  async deleteProduct(productId) {
+    try {
+      const [result] = await connection.promise().query(
+        'DELETE FROM ProductItems WHERE ProductId = ?', [productId]
+      );
+      return result.affectedRows;
+    } catch (error) {
+      throw error;
     }
-
-     /*
- async getProductsByCategory(categoryId) {
-        try {
-            const products = await knex('ProductItems').where('CategoryId', categoryId);
-            return products;
-        } catch (error) {
-            throw error;
-        }
-    }
-   
-    */
+  }
+  
+  // Uncomment and modify the getProductsByCategory method as needed
 }
 
 module.exports = new ProductItem();

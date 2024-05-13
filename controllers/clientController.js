@@ -42,6 +42,7 @@ exports.signup = async (req, res) => {
           username,
         };
     
+        
         const newClient = await Client.createNewClient(clientData);
     
         // Generate a token

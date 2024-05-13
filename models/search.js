@@ -1,17 +1,27 @@
-const { knex } = require("../config/database");
+const { connection } = require('../config/data');
 
 class Search {
-    async getProductsByCategory(categoryName) {
-        try {
-            const products = await knex('ProductItems')
-                .join('Categories', 'ProductItems.CategoryId', 'Categories.CategoryId')
-                .where('Categories.Name', categoryName)
-                .select('ProductItems.*');
-            return products;
-        } catch (error) {
-            throw error;
-        }
+  
+  // Use the async/await syntax for asynchronous code
+  async getProductsByCategory(categoryName) {
+    try {
+      // Define the SQL query, joining the ProductItems and Categories tables
+      const sql = `
+        SELECT ProductItems.*
+        FROM ProductItems
+        JOIN Categories ON ProductItems.CategoryId = Categories.CategoryId
+        WHERE Categories.Name = ?
+      `;
+
+      // Execute the query with the categoryName as the parameter
+      const [products] = await connection.promise().query(sql, [categoryName]);
+      
+      // Return the retrieved products
+      return products;
+    } catch (error) {
+      throw error;
     }
+  }
 }
 
 module.exports = new Search();

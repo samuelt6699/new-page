@@ -1,4 +1,4 @@
-require('dotenv').config();
+/*require('dotenv').config();
 
 const knex = require('knex')({
   client: 'mssql',
@@ -12,6 +12,7 @@ const knex = require('knex')({
       trustServerCertificate: true // Needed for self-signed certificates
     }
   },
+  
 
 });
 
@@ -24,4 +25,4 @@ knex.raw('SELECT 1+1 AS result')
     console.error('Error connecting to MSSQL database:', err);
   });
 
-module.exports = {knex};
+module.exports = {knex};*/

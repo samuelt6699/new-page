@@ -1,38 +1,32 @@
-const {knex} = require('../config/database');
+const { connection } = require('../config/data');
 
 class Category {
-
   async createCategory(categoryData) {
     try {
-      const result = await knex('Categories').insert(categoryData);
-      return result;
+      const [result] = await connection.promise().query(
+        'INSERT INTO Categories SET ?', categoryData
+      );
+      return result.insertId;
     } catch (error) {
       throw error;
     }
   }
+
   async getAllCategories() {
     try {
-        const categories = await knex('Categories').select();
-        return categories;
+      const [categories] = await connection.promise().query('SELECT * FROM Categories');
+      return categories;
     } catch (error) {
-        throw error;
+      throw error;
     }
-}
-
-async getCategoryById(categoryId) {
-  try {
-    const category = await knex('Categories').where('CategoryId', categoryId).first();
-    return category;
-  } catch (error) {
-    throw error;
   }
-}
 
-/*
   async getCategoryById(categoryId) {
     try {
-      const category = await knex('Categories').where('CategoryId', categoryId).first();
-      return category;
+      const [rows] = await connection.promise().query(
+        'SELECT * FROM Categories WHERE CategoryId = ?', [categoryId]
+      );
+      return rows[0] || null;
     } catch (error) {
       throw error;
     }
@@ -40,8 +34,10 @@ async getCategoryById(categoryId) {
 
   async updateCategory(categoryId, categoryData) {
     try {
-      const result = await knex('Categories').where('CategoryId', categoryId).update(categoryData);
-      return result;
+      const [result] = await connection.promise().query(
+        'UPDATE Categories SET ? WHERE CategoryId = ?', [categoryData, categoryId]
+      );
+      return result.affectedRows;
     } catch (error) {
       throw error;
     }
@@ -49,67 +45,14 @@ async getCategoryById(categoryId) {
 
   async deleteCategory(categoryId) {
     try {
-      const result = await knex('Categories').where('CategoryId', categoryId).del();
-      return result;
+      const [result] = await connection.promise().query(
+        'DELETE FROM Categories WHERE CategoryId = ?', [categoryId]
+      );
+      return result.affectedRows;
     } catch (error) {
       throw error;
     }
   }
-
-
-*/
-
 }
 
 module.exports = new Category();
-
-
-/*
-class Category {
-    async createCategory(categoryData) {
-        try {
-            const result = await db('Categories').insert(categoryData);
-            return result;
-        } catch (error) {
-            throw error;
-        }
-    }
-    
-    async getCategoryById(categoryId) {
-        try {
-            const category = await db('Categories').where('CategoryId', categoryId).first();
-            return category;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async updateCategory(categoryId, categoryData) {
-        try {
-            const result = await db('Categories').where('CategoryId', categoryId).update(categoryData);
-            return result;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async deleteCategory(categoryId) {
-        try {
-            const result = await db('Categories').where('CategoryId', categoryId).del();
-            return result;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async getAllCategories() {
-        try {
-            const categories = await db('Categories').select('*');
-            return categories;
-        } catch (error) {
-            throw error;
-        }
-    }
-}
-module.exports = new Category();
-*/
