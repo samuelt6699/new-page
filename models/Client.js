@@ -1,4 +1,4 @@
-const  {connection}  = require('../config/data');
+const { pool } = require('../config/data'); // Update to import the pool
 
 
 function isEmail(string) {
@@ -10,7 +10,7 @@ class Client {
   createNewClient(clientData) {
     const insertQuery = 'INSERT INTO ClientInfo SET ?';
     return new Promise((resolve, reject) => {
-      connection.query(insertQuery, clientData, (error, results) => {
+      pool.query(insertQuery, clientData, (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -25,7 +25,7 @@ class Client {
       ? 'SELECT * FROM ClientInfo WHERE Email = ? LIMIT 1'
       : 'SELECT * FROM ClientInfo WHERE Phone = ? LIMIT 1';
     return new Promise((resolve, reject) => {
-      connection.query(query, [username], (error, results) => {
+      pool.query(query, [username], (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -38,7 +38,7 @@ class Client {
   getClientById(clientId) {
     const query = 'SELECT * FROM ClientInfo WHERE ClientId = ? LIMIT 1';
     return new Promise((resolve, reject) => {
-      connection.query(query, [clientId], (error, results) => {
+      pool.query(query, [clientId], (error, results) => {
         if (error) {
           reject(error);
         } else {

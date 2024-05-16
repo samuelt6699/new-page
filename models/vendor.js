@@ -1,9 +1,9 @@
-const { connection } = require('../config/data');
+const { pool } = require('../config/data'); // Update to import the pool
 
 class Vendor {
   async createVendor(vendorData) {
     try {
-      const [result] = await connection.promise().query(
+      const [result] = await pool.promise().query(
         'INSERT INTO VendorInfo SET ?', [vendorData]
       );
       return result.insertId;
@@ -14,7 +14,7 @@ class Vendor {
 
   async getVendorById(vendorId) {
     try {
-      const [rows] = await connection.promise().query(
+      const [rows] = await [pool].promise().query(
         'SELECT * FROM VendorInfo WHERE VendorId = ? LIMIT 1', [vendorId]
       );
       return rows[0] || null; 
@@ -25,7 +25,7 @@ class Vendor {
 
   async getVendorByEmail(email) {
     try {
-      const [rows] = await connection.promise().query(
+      const [rows] = await pool.promise().query(
         'SELECT * FROM VendorInfo WHERE Email = ? LIMIT 1', [email]
       );
       return rows[0] || null;
@@ -36,7 +36,7 @@ class Vendor {
 
   async changePassword(vendorId, hashedPassword) {
     try {
-      const [result] = await connection.promise().query(
+      const [result] = await cpool.promise().query(
         'UPDATE VendorInfo SET PasswordHash = ? WHERE VendorId = ?', [hashedPassword, vendorId]
       );
       return result.affectedRows;

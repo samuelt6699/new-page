@@ -1,9 +1,9 @@
-const { connection } = require('../config/data');
+const { pool } = require('../config/data'); // Update to import the pool
 
 class ProductItem {
   async createProduct(productData) {
     try {
-      const [result] = await connection.promise().query(
+      const [result] = await pool.promise().query(
         'INSERT INTO ProductItems SET ?', productData
       );
       return result.insertId;
@@ -14,7 +14,7 @@ class ProductItem {
 
   async getAllProducts() {
     try {
-      const [products] = await connection.promise().query('SELECT * FROM ProductItems');
+      const [products] = await pool.promise().query('SELECT * FROM ProductItems');
       return products;
     } catch (error) {
       throw error;
@@ -23,7 +23,7 @@ class ProductItem {
 
   async getProductById(productId) {
     try {
-      const [rows] = await connection.promise().query(
+      const [rows] = await pool.promise().query(
         'SELECT * FROM ProductItems WHERE ProductId = ?', [productId]
       );
       return rows[0] || null;
@@ -34,7 +34,7 @@ class ProductItem {
   
   async updateProduct(productId, productData) {
     try {
-      const [result] = await connection.promise().query(
+      const [result] = await pool.promise().query(
         'UPDATE ProductItems SET ? WHERE ProductId = ?', [productData, productId]
       );
       return result.changedRows;
@@ -48,7 +48,7 @@ class ProductItem {
 
   async deleteProduct(productId) {
     try {
-      const [result] = await connection.promise().query(
+      const [result] = await pool.promise().query(
         'DELETE FROM ProductItems WHERE ProductId = ?', [productId]
       );
       return result.affectedRows;

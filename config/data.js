@@ -1,12 +1,14 @@
-require('dotenv').config();
-const mysql = require('mysql2');
+require("dotenv").config();
+const mysql = require("mysql2");
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
+  connectionLimit: 10, // Set based on your application needs
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-  multipleStatements: true // Important to execute multiple statements at once
+  database: process.env.DB_NAME, 
+  multipleStatements: true, 
 });
 
 const createDatabaseAndTables = `
@@ -33,8 +35,8 @@ const createDatabaseAndTables = `
   
   CREATE TABLE IF NOT EXISTS Categories (
     CategoryId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    CategoryName VARCHAR(255) NOT NULL,
-    CategoryDescription TEXT,
+    Name VARCHAR(255) NOT NULL,
+    Description TEXT,
     IsActive BIT,
     CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -49,7 +51,7 @@ const createDatabaseAndTables = `
 
   CREATE TABLE IF NOT EXISTS ProductItems (
     ProductId  BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    ProductName VARCHAR(255) NOT NULL,
+    Name VARCHAR(255) NOT NULL,
     Description TEXT,
     Price DECIMAL(10,2) NOT NULL,
     Image1Url VARCHAR(255),
@@ -92,33 +94,35 @@ const createDatabaseAndTables = `
   );
 `;
 
-connection.connect(err => {
+pool.getConnection((err, connection) => {
   if (err) {
-    return console.error('Error connecting to MySQL:', err.message);
+    return console.error("Error connecting to MySQL:", err.message);
   }
 
-  console.log('Connected to the MySQL server.');
+  console.log("Connected to the MySQL server.");
 
-  connection.query(createDatabaseAndTables, (error, results, fields) => {
+  connection.query(createDatabaseAndTables, (error, results) => {
+    connection.release();
+
     if (error) {
-      console.error('Error executing SQL:', error.message);
+      console.error(
+        "ErrorEndpoint request timed out executing SQL:",
+        error.message
+      );
     } else {
-      console.log('Database and tables have been created.');
+      console.log("Database and tables have been created.");
     }
-
-    // Not closing the connection after creating the database and tables
-    // Leaving it open for further operations
-
-    // The connection.end is removed from here
   });
 });
 
 function connectAndCreateDb(callback) {
-  // Function that can be used for further operations
-  // This function would possibly reconnect and perform an operation on the database
-  // For the current context, this function would not be doing much, as we've already connected and created the DB
-  // But this function can be a placeholder for when you want to modularize your DB operations
-  callback(null, connection);
+  pool.getConnection((err, connection) => {
+    if (err) {
+      return callback(err, null);
+    }
+
+    callback(null, connection);
+  });
 }
 
-module.exports = { connection };
+module.exports = { pool };

@@ -1,4 +1,4 @@
-const { connection } = require('../config/data');
+const { pool } = require('../config/data'); // Update to import the pool
 
 class CartItem {
   // To add a new cart item
@@ -14,7 +14,7 @@ class CartItem {
     }
 
     // Insert the new cart item into the database
-    const [result] = await connection.promise().query(
+    const [result] = await pool.promise().query(
       'INSERT INTO CartItems (ClientId, ProductId, Quantity) VALUES (?, ?, ?)',
       [cartData.ClientId, cartData.ProductId, cartData.Quantity]
     );
@@ -24,7 +24,7 @@ class CartItem {
 
   // To get all cart items for a client
   async getAll(clientId) {
-    const [result] = await connection.promise().query(
+    const [result] = await pool.promise().query(
       'SELECT * FROM CartItems WHERE ClientId = ?',
       [clientId]
     );
@@ -33,7 +33,7 @@ class CartItem {
 
   // To find a cart item by ID
   async findById(cartId) {
-    const [rows] = await connection.promise().query(
+    const [rows] = await pool.promise().query(
       'SELECT * FROM CartItems WHERE CartId = ? LIMIT 1',
       [cartId]
     );
@@ -42,7 +42,7 @@ class CartItem {
 
   // To update a cart item by ID
   async updateById(cartItemId, updateData) {
-    const [result] = await connection.promise().query(
+    const [result] = await pool.promise().query(
       'UPDATE CartItems SET ? WHERE CartItemId = ?',
       [updateData, cartItemId]
     );
@@ -51,7 +51,7 @@ class CartItem {
 
   // To delete a cart item by ID
   async deleteById(cartItemId) {
-    const [result] = await connection.promise().query(
+    const [result] = await pool.promise().query(
       'DELETE FROM CartItems WHERE CartItemId = ?',
       [cartItemId]
     );

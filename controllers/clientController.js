@@ -46,7 +46,7 @@ exports.signup = async (req, res) => {
         const newClient = await Client.createNewClient(clientData);
     
         // Generate a token
-        const token = jwt.sign({ id: newClient._id }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: newClient.insertId }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN || "2h",
         });
     

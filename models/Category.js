@@ -1,9 +1,9 @@
-const { connection } = require('../config/data');
+const { pool } = require('../config/data'); // Update to import the pool
 
 class Category {
   async createCategory(categoryData) {
     try {
-      const [result] = await connection.promise().query(
+      const [result] = await pool.promise().query(
         'INSERT INTO Categories SET ?', categoryData
       );
       return result.insertId;
@@ -14,7 +14,7 @@ class Category {
 
   async getAllCategories() {
     try {
-      const [categories] = await connection.promise().query('SELECT * FROM Categories');
+      const [categories] = await pool.promise().query('SELECT * FROM Categories');
       return categories;
     } catch (error) {
       throw error;
@@ -23,7 +23,7 @@ class Category {
 
   async getCategoryById(categoryId) {
     try {
-      const [rows] = await connection.promise().query(
+      const [rows] = await pool.promise().query(
         'SELECT * FROM Categories WHERE CategoryId = ?', [categoryId]
       );
       return rows[0] || null;
@@ -34,7 +34,7 @@ class Category {
 
   async updateCategory(categoryId, categoryData) {
     try {
-      const [result] = await connection.promise().query(
+      const [result] = await pool.promise().query(
         'UPDATE Categories SET ? WHERE CategoryId = ?', [categoryData, categoryId]
       );
       return result.affectedRows;
@@ -45,7 +45,7 @@ class Category {
 
   async deleteCategory(categoryId) {
     try {
-      const [result] = await connection.promise().query(
+      const [result] = await pool.promise().query(
         'DELETE FROM Categories WHERE CategoryId = ?', [categoryId]
       );
       return result.affectedRows;

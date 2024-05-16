@@ -1,4 +1,4 @@
-const { connection } = require('../config/data');
+const { pool } = require('../config/data'); // Update to import the pool
 
 class Search {
   
@@ -14,7 +14,7 @@ class Search {
       `;
 
       // Execute the query with the categoryName as the parameter
-      const [products] = await connection.promise().query(sql, [categoryName]);
+      const [products] = await pool.promise().query(sql, [categoryName]);
       
       // Return the retrieved products
       return products;

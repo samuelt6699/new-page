@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const authenticateToken = require('./models/authenticateToken');
 const clientRoutes = require("./routes/client");
-const categoryRoutes = require("./routes/catgeory");
+const categoryRoutes = require("./routes/category");
 const productItemRoutes = require("./routes/ProductItem");
 const cartItemRoute = require('./routes/cartItem');
 const searchRoute = require('./routes/search')
@@ -33,4 +33,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
