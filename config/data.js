@@ -11,9 +11,10 @@ const pool = mysql.createPool({
   multipleStatements: true, 
 });
 
+
 const createDatabaseAndTables = `
-  CREATE DATABASE IF NOT EXISTS marketPlace;
-  USE marketPlace;
+  CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME};
+  USE ${process.env.DB_NAME};
 
   CREATE TABLE IF NOT EXISTS ClientInfo (
     ClientId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
