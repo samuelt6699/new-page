@@ -19,7 +19,7 @@ app.use(express.json());
 
 app.use(cors());
 
-
+//
 app.use("/api/", clientRoutes);
 app.use('/api/vendor', vendorRoutes);
 app.use("/api/categories", categoryRoutes);
