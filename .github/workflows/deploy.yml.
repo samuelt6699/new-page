@@ -1,0 +1,44 @@
+# Name of the workflow
+name: Deploy Application
+
+# Define the trigger for the workflow - here it runs on every push to the main branch
+on:
+  push:
+    branches:
+      - main  # Change this if your main branch has a different name
+
+# Define the jobs that will be run as part of this workflow
+jobs:
+  deploy:
+    # The type of machine to run the job on
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Node.js environment
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'  # Specify the Node.js version you are using
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+   
+
+    # Step 5: Deploy to server
+    - name: Deploy to server
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SERVER: 167.71.165.213  # Replace with your server's domain or IP
+        USERNAME: root  # Replace with your server's SSH username
+        REMOTE_DIR: /var/www/backend  # Replace with the path where you want to deploy the app
+      run: |
+        echo "${SSH_PRIVATE_KEY}" > /tmp/private_key
+        chmod 600 /tmp/private_key
+        rsync -avz -e "ssh -i /tmp/private_key" --exclude 'node_modules' ./ ${USERNAME}@${SERVER}:${REMOTE_DIR}
+        ssh -i /tmp/private_key ${USERNAME}@${SERVER} 'cd ${REMOTE_DIR} && npm install && pm2 restart app'
