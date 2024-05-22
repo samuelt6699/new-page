@@ -46,9 +46,7 @@ exports.signup = async (req, res) => {
         const newClient = await Client.createNewClient(clientData);
     
         // Generate a token
-        const token = jwt.sign({ id: newClient.insertId }, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRES_IN || "2h",
-        });
+        const token = jwt.sign({ id: newClient.insertId }, process.env.JWT_SECRET);
     
         // Send the response back with camelCase property names
         res.status(201).json({
@@ -92,13 +90,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid usename or password" });
     }
     const jwtSecret = process.env.JWT_SECRET;
-    const token = jwt.sign(
-      { clientId: client.ClientId, firstName: client.FirstName },
-      jwtSecret,
-      {
-        expiresIn: "1h",
-      }
-    );
+    const token = jwt.sign({ clientId: client.ClientId, firstName: client.FirstName }, jwtSecret);
 
     res.status(200).json({ token,  user: {
         firstName: client.FirstName,
