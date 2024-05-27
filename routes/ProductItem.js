@@ -23,6 +23,6 @@ router.delete('/:productId', productController.deleteProduct);
 
 router.get('/', productController.getAllProducts);
 
-
+//router.get('/category/:categoryId', productController.getProductsByCategory);
 
 module.exports = router;

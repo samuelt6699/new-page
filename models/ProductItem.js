@@ -1,4 +1,4 @@
-const { pool } = require('../config/data'); // Ensure this points to your MySQL connection pool
+const { pool } = require('../config/data'); // Update to import the pool
 
 class ProductItem {
   async createProduct(productData) {
@@ -17,20 +17,6 @@ class ProductItem {
       const [products] = await pool.promise().query('SELECT * FROM ProductItems');
       return products;
     } catch (error) {
-      throw error;
-    }
-  }
-
-  async getProductsByCategory(categoryId) {
-    try {
-      const query = `
-        SELECT * FROM ProductItems
-        WHERE CategoryId = ?
-      `;
-      const [results] = await pool.promise().query(query, [categoryId]);
-      return results;
-    } catch (error) {
-      console.error("Error fetching products by category:", error.message || error);
       throw error;
     }
   }
@@ -58,6 +44,8 @@ class ProductItem {
     }
   }
 
+  // The mapProductDataToDbColumns function can remain the same, as it is a utility function unrelated to the database operation
+
   async deleteProduct(productId) {
     try {
       const [result] = await pool.promise().query(
@@ -68,6 +56,8 @@ class ProductItem {
       throw error;
     }
   }
+  
+  // Uncomment and modify the getProductsByCategory method as needed
 }
 
 module.exports = new ProductItem();

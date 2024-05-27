@@ -135,7 +135,6 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
-
 /*
 exports.getProductsByCategory = async (req, res) => {
     try {
