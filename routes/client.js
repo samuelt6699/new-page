@@ -10,6 +10,6 @@ router.post('/signup', clientController.signup);
 router.post('/login', clientController.login);
 
 // Change Password route with authentication
-router.post('/change-password', authenticateToken, clientController.changePassword);
+//router.post('/change-password', authenticateToken, clientController.changePassword);
 
 module.exports = router;

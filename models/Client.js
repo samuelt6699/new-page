@@ -48,7 +48,7 @@ class Client {
     });
   }
 
-  async changePassword(clientId, hashedPassword) {
+  /*async changePassword(clientId, hashedPassword) {
     const query = 'UPDATE ClientInfo SET PasswordHash = ? WHERE ClientId = ?';
     const queryValues = [hashedPassword, clientId];
   
@@ -58,7 +58,7 @@ class Client {
     } catch (error) {
       throw error;
     }
-  }
+  }*/
 }
 
 module.exports = {
