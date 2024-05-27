@@ -68,7 +68,6 @@ class ProductItem {
       throw error;
     }
   }
-
 }
 
 module.exports = new ProductItem();
