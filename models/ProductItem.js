@@ -21,6 +21,20 @@ class ProductItem {
     }
   }
 
+  async getProductsByCategory(category) {
+    try {
+      const query = `
+        SELECT * FROM ProductItems
+        WHERE CategoryId = ?
+      `;
+      const [results] = await pool.promise().query(query, [category]);
+      return results;
+    } catch (error) {
+      console.error("Error fetching products by category:", error.message || error);
+      throw error;
+    }
+  }
+
   async getProductById(productId) {
     try {
       const [rows] = await pool.promise().query(

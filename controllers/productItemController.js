@@ -49,7 +49,17 @@ exports.createProduct = async (req, res) => {
 
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await ProductItem.getAllProducts();
+    const { query, category } = req.query;
+    
+    let products;
+    if (query) {
+      products = await ProductItem.getProductsBySearchTerm(query);
+    } else if (category) {
+      products = await ProductItem.getProductsByCategory(category);
+    } else {
+      products = await ProductItem.getAllProducts();
+    }
+    
     res.status(200).json(products);
   } catch (error) {
     console.error("Error getting all products:", error.message || error);
@@ -135,15 +145,6 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
-exports.getProductsBySearchTerm = async (req, res) => {
-  try {
-    const searchTerm = req.query.query; // Ensure search term is retrieved correctly
-    const products = await ProductItem.getProductsBySearchTerm(searchTerm);
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to search products' });
-  }
-};
 
 /*
 exports.getProductsByCategory = async (req, res) => {
