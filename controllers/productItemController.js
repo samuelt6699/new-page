@@ -49,17 +49,7 @@ exports.createProduct = async (req, res) => {
 
 exports.getAllProducts = async (req, res) => {
   try {
-    const { query, category } = req.query;
-    
-    let products;
-    if (query) {
-      products = await ProductItem.getProductsBySearchTerm(query);
-    } else if (category) {
-      products = await ProductItem.getProductsByCategory(category);
-    } else {
-      products = await ProductItem.getAllProducts();
-    }
-    
+    const products = await ProductItem.getAllProducts();
     res.status(200).json(products);
   } catch (error) {
     console.error("Error getting all products:", error.message || error);

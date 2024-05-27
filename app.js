@@ -30,7 +30,7 @@ app.use('/api/vendor', vendorRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/productItem",authenticateToken , productItemRoutes);
 app.use("/api/cartItems",authenticateToken, cartItemRoute);
-app.use("/api/category", searchRoute);
+app.use("/api/search", searchRoute);
 //app.use("/api/advertiser",verifyAuth, advertiserRoutes);
 //app.use("/api/advertisement",verifyAuth, advertisementRoutes);
 //app.use("/api/ad_placement",verifyAuth, adPlacementRoutes);

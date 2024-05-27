@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const searchController = require('../controllers/searchController')
+const searchController = require('../controllers/searchController');
 
-router.get('/:categoryName', searchController.getProductsByCategory);
+router.get('/category/:categoryName', searchController.getProductsByCategory);
+router.get('/term', searchController.getProductsBySearchTerm); 
 
 module.exports = router;

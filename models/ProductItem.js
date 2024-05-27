@@ -21,13 +21,13 @@ class ProductItem {
     }
   }
 
-  async getProductsByCategory(category) {
+  async getProductsByCategory(categoryId) {
     try {
       const query = `
         SELECT * FROM ProductItems
         WHERE CategoryId = ?
       `;
-      const [results] = await pool.promise().query(query, [category]);
+      const [results] = await pool.promise().query(query, [categoryId]);
       return results;
     } catch (error) {
       console.error("Error fetching products by category:", error.message || error);
@@ -65,20 +65,6 @@ class ProductItem {
       );
       return result.affectedRows;
     } catch (error) {
-      throw error;
-    }
-  }
-  
-  async getProductsBySearchTerm(searchTerm) {
-    try {
-      const query = `
-        SELECT * FROM ProductItems
-        WHERE Name LIKE ? OR Description LIKE ?
-      `;
-      const [results] = await pool.promise().query(query, [`%${searchTerm}%`, `%${searchTerm}%`]);
-      return results;
-    } catch (error) {
-      console.error("Error searching for products:", error.message || error);
       throw error;
     }
   }
