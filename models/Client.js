@@ -1,4 +1,4 @@
-const { pool } = require('../config/data'); // Update to import the pool
+const { pool } = require('../config/data');
 
 
 function isEmail(string) {
@@ -47,8 +47,19 @@ class Client {
       });
     });
   }
-}
 
+  async changePassword(clientId, hashedPassword) {
+    const query = 'UPDATE ClientInfo SET PasswordHash = ? WHERE ClientId = ?';
+    const queryValues = [hashedPassword, clientId];
+  
+    try {
+      const [results] = await pool.query(query, queryValues);
+      return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+}
 
 module.exports = {
   Client: new Client(),

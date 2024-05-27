@@ -1,4 +1,4 @@
-const { pool } = require('../config/data'); // Update to import the pool
+const { pool } = require('../config/data'); // Ensure this points to your MySQL connection pool
 
 class ProductItem {
   async createProduct(productData) {
@@ -44,8 +44,6 @@ class ProductItem {
     }
   }
 
-  // The mapProductDataToDbColumns function can remain the same, as it is a utility function unrelated to the database operation
-
   async deleteProduct(productId) {
     try {
       const [result] = await pool.promise().query(
@@ -57,7 +55,20 @@ class ProductItem {
     }
   }
   
-  // Uncomment and modify the getProductsByCategory method as needed
+  async getProductsBySearchTerm(searchTerm) {
+    try {
+      const query = `
+        SELECT * FROM ProductItems
+        WHERE Name LIKE ? OR Description LIKE ?
+      `;
+      const [results] = await pool.promise().query(query, [`%${searchTerm}%`, `%${searchTerm}%`]);
+      return results;
+    } catch (error) {
+      console.error("Error searching for products:", error.message || error);
+      throw error;
+    }
+  }
+
 }
 
 module.exports = new ProductItem();

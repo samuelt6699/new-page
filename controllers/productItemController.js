@@ -48,15 +48,22 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getAllProducts = async (req, res) => {
+  const { query } = req.query;
+
   try {
-    const products = await ProductItem.getAllProducts();
+    let products;
+    if (query) {
+      products = await ProductItem.getProductsBySearchTerm(query);
+    } else {
+      products = await ProductItem.getAllProducts();
+    }
+
     res.status(200).json(products);
   } catch (error) {
-    console.error("Error getting all products:", error.message || error);
+    console.error("Error getting products:", error.message || error);
     res.status(500).json({ message: "Failed to retrieve products" });
   }
 };
-
 exports.getProductById = async (req, res) => {
   try {
     const { productId } = req.params;
