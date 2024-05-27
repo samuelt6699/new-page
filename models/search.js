@@ -11,22 +11,7 @@ class Search {
       throw error;
     }
   }
-  
-  async getProductsByCategory(categoryName) {
-    try {
-      const sql = `
-        SELECT ProductItems.*
-        FROM ProductItems
-        JOIN Categories ON ProductItems.CategoryId = Categories.CategoryId
-        WHERE Categories.Name = ?
-      `;
-      const [products] = await pool.promise().query(sql, [categoryName]);
-      return products;
-    } catch (error) {
-      console.error("Error fetching products by category:", error.message || error);
-      throw error;
-    }
-  }
+
 }
 
 module.exports = new Search();
