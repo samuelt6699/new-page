@@ -1,4 +1,4 @@
-const { pool } = require('../config/data'); // Ensure this points to your MySQL connection pool
+const { pool } = require('../config/data'); 
 
 class Search {
   async getProductsBySearchTerm(searchTerm) {
