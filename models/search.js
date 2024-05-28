@@ -3,7 +3,7 @@ const { pool } = require('../config/data'); // Update to import the pool
 class Search {
 
   // Use the async/await syntax for asynchronous code
-  /*async getProductsByCategory(categoryName) {
+ async getProductsByCategory(categoryName) {
     try {
       // Define the SQL query, joining the ProductItems and Categories tables
       const sql = `
@@ -22,7 +22,7 @@ class Search {
       throw error;
     }
   }
-*/
+
   // Add the search functionality by description here
   async searchProducts(query) {
     try {

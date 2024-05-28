@@ -1,5 +1,5 @@
 const search = require('../models/search');
-/*
+
 exports.getProductsByCategory = async (req, res) => {
   try {
     const { categoryName } = req.params;
@@ -10,7 +10,7 @@ exports.getProductsByCategory = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve products' });
   }
 };
-*/
+
 // Search products by description
 exports.searchProducts = async (req, res) => {
   const query = req.query.q;

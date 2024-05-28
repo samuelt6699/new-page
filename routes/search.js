@@ -3,7 +3,7 @@ const router = express.Router();
 const searchController = require('../controllers/searchController');
 
 // Route for getting products by category
-//router.get('/category/:categoryName', searchController.getProductsByCategory);
+router.get('/category/:categoryName', searchController.getProductsByCategory);
 
 // Route for searching products by description
 router.get('/search', searchController.searchProducts);
