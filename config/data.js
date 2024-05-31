@@ -93,6 +93,22 @@ const createDatabaseAndTables = `
     Country VARCHAR(255),
     PasswordHash CHAR(60) NOT NULL
   );
+  CREATE TABLE IF NOT EXISTS Orders (
+    OrderId BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ClientId BIGINT NOT NULL,
+    OrderDate DATETIME NOT NULL,
+    PaymentMethod VARCHAR(255) NULL,
+    FOREIGN KEY (ClientId) REFERENCES ClientInfo(ClientId)
+);
+
+CREATE TABLE IF NOT EXISTS OrderDetails (
+    OrderDetailId BIGINT AUTO_INCREMENT PRIMARY KEY,
+    OrderId BIGINT NOT NULL,
+    ProductId BIGINT NOT NULL,
+    Quantity INT NOT NULL,
+    FOREIGN KEY (OrderId) REFERENCES Orders(OrderId),
+    FOREIGN KEY (ProductId) REFERENCES ProductItems(ProductId)
+);
 `;
 
 pool.getConnection((err, connection) => {
@@ -107,7 +123,7 @@ pool.getConnection((err, connection) => {
 
     if (error) {
       console.error(
-        "ErrorEndpoint request timed out executing SQL:",
+        "Error executing SQL:",
         error.message
       );
     } else {

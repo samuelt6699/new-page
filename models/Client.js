@@ -1,6 +1,5 @@
 const { pool } = require('../config/data');
 
-
 function isEmail(string) {
   const emailRegex = /\S+@\S+\.\S+/;
   return emailRegex.test(string);
@@ -48,17 +47,40 @@ class Client {
     });
   }
 
-  /*async changePassword(clientId, hashedPassword) {
-    const query = 'UPDATE ClientInfo SET PasswordHash = ? WHERE ClientId = ?';
-    const queryValues = [hashedPassword, clientId];
-  
-    try {
-      const [results] = await pool.query(query, queryValues);
-      return results;
-    } catch (error) {
-      throw error;
-    }
-  }*/
+  storeVerificationCode(clientId, verificationCode) {
+    const query = 'UPDATE ClientInfo SET verification_code = ?, verification_code_expires_at = DATE_ADD(NOW(), INTERVAL 15 MINUTE) WHERE ClientId = ?';
+    return new Promise((resolve, reject) => {
+      pool.query(query, [verificationCode, clientId], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  }
+
+  verifyClient(clientId, verificationCode) {
+    const query = 'SELECT * FROM ClientInfo WHERE ClientId = ? AND verification_code = ? AND verification_code_expires_at > NOW() LIMIT 1';
+    return new Promise((resolve, reject) => {
+      pool.query(query, [clientId, verificationCode], (error, results) => {
+        if (error) {
+          reject(error);
+        } else if (results.length) {
+          const updateQuery = 'UPDATE ClientInfo SET is_verified = 1 WHERE ClientId = ?';
+          pool.query(updateQuery, [clientId], (updateError) => {
+            if (updateError) {
+              reject(updateError);
+            } else {
+              resolve(results[0]);
+            }
+          });
+        } else {
+          resolve(null);
+        }
+      });
+    });
+  }
 }
 
 module.exports = {

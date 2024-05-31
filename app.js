@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const authenticateToken = require('./models/authenticateToken');
-
+const orderRoutes= require("./routes/orders");
 const clientRoutes = require("./routes/client");
 const categoryRoutes = require("./routes/category");
 const productItemRoutes = require("./routes/ProductItem");
@@ -26,7 +26,8 @@ app.use(cors());
 app.use("/api/", clientRoutes);
 app.use('/api/vendor', vendorRoutes);
 app.use("/api/categories", categoryRoutes);
-app.use("/api/productItem", productItemRoutes); // Assuming no need for authentication for product items
+app.use("/api/productItem", productItemRoutes);
+app.use("/api/order", orderRoutes);
 app.use("/api/cartItems", authenticateToken, cartItemRoute);
 app.use("/api/", searchRoute);
 // app.use("/api/advertiser", authenticateToken, advertiserRoutes);
