@@ -29,7 +29,7 @@ app.use('/api/vendor', vendorRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/productItem", productItemRoutes);
 app.use("/api/order", orderRoutes);
-app.use('/api/adderss', addressRoutes);
+app.use('/api/address', addressRoutes)
 app.use("/api/cartItems", authenticateToken, cartItemRoute);
 app.use("/api/", searchRoute);
 // app.use("/api/advertiser", authenticateToken, advertiserRoutes);
