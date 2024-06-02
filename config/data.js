@@ -16,6 +16,18 @@ const createDatabaseAndTables = `
   CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME};
   USE ${process.env.DB_NAME};
 
+  CREATE TABLE IF NOT EXISTS Addresses (
+    AddressId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Address1 VARCHAR(255) NOT NULL,
+    Address2 VARCHAR(255),
+    City VARCHAR(255) NOT NULL,
+    State VARCHAR(255) NOT NULL,
+    PostalCode VARCHAR(255) NOT NULL,
+    Country VARCHAR(255) DEFAULT 'USA',
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  );
+
   CREATE TABLE IF NOT EXISTS ClientInfo (
     ClientId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     FirstName VARCHAR(255) NOT NULL,
@@ -23,17 +35,13 @@ const createDatabaseAndTables = `
     Username VARCHAR(255) NOT NULL,
     Phone VARCHAR(255),
     Email VARCHAR(255),
-    Address1 VARCHAR(255),
-    Address2 VARCHAR(255),
-    City VARCHAR(255),
-    State VARCHAR(255),
-    PostalCode VARCHAR(255),
-    Country VARCHAR(255) DEFAULT 'USA',
     PasswordHash CHAR(60) NOT NULL,
     CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    AddressId BIGINT,  -- New reference to the Addresses table
+    FOREIGN KEY (AddressId) REFERENCES Addresses(AddressId)
   );
-  
+
   CREATE TABLE IF NOT EXISTS Categories (
     CategoryId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
@@ -85,30 +93,34 @@ const createDatabaseAndTables = `
     ContactName VARCHAR(255),
     Phone VARCHAR(255),
     Email VARCHAR(255),
-    Address1 VARCHAR(255),
-    Address2 VARCHAR(255),
-    City VARCHAR(255),
-    State VARCHAR(255),
-    PostalCode VARCHAR(255),
-    Country VARCHAR(255),
-    PasswordHash CHAR(60) NOT NULL
+    PasswordHash CHAR(60) NOT NULL,
+    AddressId BIGINT,  -- New reference to the Addresses table
+    FOREIGN KEY (AddressId) REFERENCES Addresses(AddressId)
   );
+
   CREATE TABLE IF NOT EXISTS Orders (
     OrderId BIGINT AUTO_INCREMENT PRIMARY KEY,
-    ClientId BIGINT NOT NULL,
-    OrderDate DATETIME NOT NULL,
+    ClientId BIGINT  NULL,
+    OrderDate DATETIME  NULL,
     PaymentMethod VARCHAR(255) NULL,
-    FOREIGN KEY (ClientId) REFERENCES ClientInfo(ClientId)
-);
+    ShippingAddressId BIGINT,  -- Reference to the Addresses table for shipping address
+    BillingAddressId BIGINT,  -- Optional: Billing address reference
+    ShippingPrice DECIMAL(10,2) NULL,
+    FinalTotal DECIMAL(10,2)  NULL,
+    FOREIGN KEY (ClientId) REFERENCES ClientInfo(ClientId),
+    FOREIGN KEY (ShippingAddressId) REFERENCES Addresses(AddressId),
+    FOREIGN KEY (BillingAddressId) REFERENCES Addresses(AddressId)
+  );
 
-CREATE TABLE IF NOT EXISTS OrderDetails (
+  CREATE TABLE IF NOT EXISTS OrderDetails (
     OrderDetailId BIGINT AUTO_INCREMENT PRIMARY KEY,
     OrderId BIGINT NOT NULL,
     ProductId BIGINT NOT NULL,
     Quantity INT NOT NULL,
     FOREIGN KEY (OrderId) REFERENCES Orders(OrderId),
     FOREIGN KEY (ProductId) REFERENCES ProductItems(ProductId)
-);
+  );
+
 `;
 
 pool.getConnection((err, connection) => {

@@ -7,7 +7,8 @@ const saltRounds = 10;
 
 exports.signup = async (req, res) => {
 
-    const { firstName, lastName, username, password } = req.body;
+
+    const { firstName, lastName, username, password, } = req.body;
   
     if (!firstName || !lastName || !username || !password ) {
       return res.status(400).json({
