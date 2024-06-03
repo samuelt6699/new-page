@@ -4,10 +4,37 @@ class Order {
   // Create a new order
   async createOrder(orderData) {
     try {
-      const query = 'INSERT INTO Orders SET ?';
-      const [result] = await pool.promise().query(query, orderData);
-      return result.insertId;
+      const query = `INSERT INTO Orders (ClientId, OrderDate, PaymentMethod, ShippingAddressId, BillingAddressId, ShippingPrice, FinalTotal)
+                     VALUES (?, ?, ?, ?, ?, ?, ?)`;
+      const [result] = await pool.promise().query(query, [
+        orderData.ClientId,
+        orderData.OrderDate,
+        orderData.PaymentMethod,
+        orderData.ShippingAddressId,
+        orderData.BillingAddressId,
+        orderData.ShippingPrice,
+        orderData.FinalTotal
+      ]);
+      return result.insertId; // Return the inserted order ID
     } catch (error) {
+      console.error('Error creating order:', error);
+      throw error;
+    }
+  }
+
+  async createOrderDetails(orderDetails) {
+    try {
+      const query = `INSERT INTO OrderDetails (OrderId, ProductId, Quantity, PriceAtOrder)
+                     VALUES ?`;
+      const values = orderDetails.map(detail => [
+        detail.OrderId,
+        detail.ProductId,
+        detail.Quantity,
+        detail.PriceAtOrder
+      ]);
+      await pool.promise().query(query, [values]);
+    } catch (error) {
+      console.error('Error creating order details:', error);
       throw error;
     }
   }

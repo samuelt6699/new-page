@@ -4,17 +4,43 @@ const orderModel = require('../models/orders');
 // Create a new order
 exports.createOrder = async (req, res) => {
     try {
-        const orderData = req.body;
-        console.log("Creating order with data:", orderData); // Log the incoming order data
+        const {
+            ClientId,
+            OrderDate,
+            PaymentMethod,
+            ShippingAddressId,
+            BillingAddressId,
+            ShippingPrice,
+            FinalTotal,
+            cartItems,
+        } = req.body;
 
-        const result = await orderModel.createOrder(orderData);
-        res.status(201).json({ message: 'Order created successfully', orderId: result });
+        // Insert the order
+        const orderId = await orderModel.createOrder({
+            ClientId,
+            OrderDate,
+            PaymentMethod,
+            ShippingAddressId,
+            BillingAddressId,
+            ShippingPrice,
+            FinalTotal
+        });
+
+        // Prepare and insert order details
+        const orderDetails = cartItems.map(item => ({
+            OrderId: orderId,
+            ProductId: item.ProductId,
+            Quantity: item.Quantity,
+            PriceAtOrder: item.PriceAtOrder,  // Ensure you pass the correct price here
+        }));
+        await orderModel.createOrderDetails(orderDetails);
+
+        res.status(201).json({ message: 'Order created successfully', orderId });
     } catch (error) {
-        console.error('Error creating order:', error.message); // Log detailed error message
+        console.error('Error creating order:', error.message);
         res.status(500).json({ message: 'Failed to create order' });
     }
 };
-
 // Get order by ID
 exports.getOrderById = async (req, res) => {
     try {
