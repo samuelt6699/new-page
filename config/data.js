@@ -121,7 +121,6 @@ const createDatabaseAndTables = `
     FOREIGN KEY (ProductId) REFERENCES ProductItems(ProductId)
   );
 
-
 `;
 
 pool.getConnection((err, connection) => {
