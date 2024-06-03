@@ -5,10 +5,12 @@ const orderModel = require('../models/orders');
 exports.createOrder = async (req, res) => {
     try {
         const orderData = req.body;
+        console.log("Creating order with data:", orderData); // Log the incoming order data
+
         const result = await orderModel.createOrder(orderData);
-        res.status(201).json({ message: 'Order created successfully', orderId: result[0] });
+        res.status(201).json({ message: 'Order created successfully', orderId: result });
     } catch (error) {
-        console.error('Error creating order');
+        console.error('Error creating order:', error.message); // Log detailed error message
         res.status(500).json({ message: 'Failed to create order' });
     }
 };

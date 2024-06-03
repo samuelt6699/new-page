@@ -1,16 +1,17 @@
+// Load environment variables from .env file
 require("dotenv").config();
 const mysql = require("mysql2");
 
+// Create a MySQL pool
 const pool = mysql.createPool({
-  connectionLimit: 10, // Set based on your application needs
+  connectionLimit: 10,
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-  database: process.env.DB_NAME, 
-  multipleStatements: true, 
+  database: process.env.DB_NAME,
+  multipleStatements: true,
 });
-
 
 const createDatabaseAndTables = `
   CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME};
@@ -27,7 +28,7 @@ const createDatabaseAndTables = `
     CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
-  
+
   CREATE TABLE IF NOT EXISTS Addresses (
     AddressId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Address1 VARCHAR(255) NOT NULL,
@@ -57,7 +58,7 @@ const createDatabaseAndTables = `
     MetaKeywords VARCHAR(255),
     FOREIGN KEY (ParentCategoryId) REFERENCES Categories(CategoryId)
   );
-
+  
   CREATE TABLE IF NOT EXISTS ProductItems (
     ProductId  BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
@@ -108,10 +109,7 @@ const createDatabaseAndTables = `
     ShippingPrice DECIMAL(10,2) NULL,
     FinalTotal DECIMAL(10,2) NULL,
     CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (ClientId) REFERENCES ClientInfo(ClientId),
-    FOREIGN KEY (ShippingAddressId) REFERENCES Addresses(AddressId),
-    FOREIGN KEY (BillingAddressId) REFERENCES Addresses(AddressId)
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
 
   CREATE TABLE IF NOT EXISTS OrderDetails (
@@ -136,25 +134,11 @@ pool.getConnection((err, connection) => {
     connection.release();
 
     if (error) {
-      console.error(
-        "Error executing SQL:",
-        error.message
-      );
+      console.error("Error executing SQL:", error.message);
     } else {
       console.log("Database and tables have been created.");
     }
   });
 });
-
-
-function connectAndCreateDb(callback) {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      return callback(err, null);
-    }
-
-    callback(null, connection);
-  });
-}
 
 module.exports = { pool };
