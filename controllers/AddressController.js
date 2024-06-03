@@ -12,7 +12,6 @@ exports.createAddress = async (req, res) => {
   }
 };
 
-// Get address by ID
 exports.getAddressById = async (req, res) => {
   try {
     const { addressId } = req.params;
@@ -23,7 +22,7 @@ exports.getAddressById = async (req, res) => {
     res.status(200).json(address);
   } catch (error) {
     console.error('Error fetching address by ID:', error);
-    res.status(500).json({ message: 'Failed to retrieveEndpoint request timed out address' });
+    res.status(500).json({ message: 'Failed to retrieve address' });
   }
 };
 
