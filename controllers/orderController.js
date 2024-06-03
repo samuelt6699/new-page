@@ -1,5 +1,11 @@
 const orderModel = require('../models/orders');
+const addressModel = require('../models/Address'); 
 
+// Helper function to format DateTime
+const formatDateTime = (dateString) => {
+  const date = new Date(dateString);
+  return date.toISOString().slice(0, 19).replace('T', ' ');
+};
 
 // Create a new order
 exports.createOrder = async (req, res) => {
@@ -12,16 +18,35 @@ exports.createOrder = async (req, res) => {
             BillingAddressId,
             ShippingPrice,
             FinalTotal,
-            cartItems,
+            cartItems
         } = req.body;
+
+        // Format the OrderDate
+        const formattedDate = formatDateTime(OrderDate);
+
+        // Check if ShippingAddressId and BillingAddressId are given, if not then create a new address
+        let shippingAddressId = ShippingAddressId;
+        let billingAddressId = BillingAddressId;
+
+        if (!shippingAddressId) {
+            // Create a new address and get its ID
+            // Assuming Address data is provided in req.body.shippingAddress
+            shippingAddressId = await addressModel.createAddress(req.body.shippingAddress);
+        }
+
+        if (!billingAddressId) {
+            // Create a new address and get its ID
+            // Assuming Address data is provided in req.body.billingAddress
+            billingAddressId = await addressModel.createAddress(req.body.billingAddress);
+        }
 
         // Insert the order
         const orderId = await orderModel.createOrder({
             ClientId,
-            OrderDate,
+            OrderDate: formattedDate,
             PaymentMethod,
-            ShippingAddressId,
-            BillingAddressId,
+            ShippingAddressId: shippingAddressId,
+            BillingAddressId: billingAddressId,
             ShippingPrice,
             FinalTotal
         });

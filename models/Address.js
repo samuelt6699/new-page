@@ -3,9 +3,19 @@ const { pool } = require('../config/data'); // Import the pool
 class Address {
   async createAddress(addressData) {
     try {
-      const [result] = await pool.promise().query('INSERT INTO Addresses SET ?', addressData);
-      return result.insertId;
+      const query = `INSERT INTO Addresses (Address1, Address2, City, State, PostalCode, Country, ClientId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+      const [result] = await pool.promise().query(query, [
+        addressData.Address1,
+        addressData.Address2,
+        addressData.City,
+        addressData.State,
+        addressData.PostalCode,
+        addressData.Country || 'USA',
+        addressData.ClientId,
+      ]);
+      return result.insertId; // Return the inserted address ID
     } catch (error) {
+      console.error('Error creating address:', error);
       throw error;
     }
   }
