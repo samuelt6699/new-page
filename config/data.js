@@ -99,6 +99,7 @@ const createDatabaseAndTables = `
     FOREIGN KEY (AddressId) REFERENCES Addresses(AddressId)
   );
 
+  
   CREATE TABLE IF NOT EXISTS Orders (
     OrderId BIGINT AUTO_INCREMENT PRIMARY KEY,
     ClientId BIGINT NULL,
@@ -114,10 +115,10 @@ const createDatabaseAndTables = `
 
   CREATE TABLE IF NOT EXISTS OrderDetails (
     OrderDetailId BIGINT AUTO_INCREMENT PRIMARY KEY,
-    OrderId BIGINT NOT NULL,
-    ProductId BIGINT NOT NULL,
-    Quantity INT NOT NULL,
-    PriceAtOrder DECIMAL(10,2) NOT NULL,  -- Store the price at the time of order
+    OrderId BIGINT  NULL,
+    ProductId BIGINT  NULL,
+    Quantity INT  NULL,
+    PriceAtOrder DECIMAL(10,2) NULL,  -- Store the price at the time of order
     FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE,  -- Ensure order details are deleted when the order is deleted
     FOREIGN KEY (ProductId) REFERENCES ProductItems(ProductId) ON DELETE CASCADE  -- Ensure product details are deleted when the product is deleted
   );

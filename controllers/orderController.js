@@ -65,6 +65,7 @@ exports.createOrder = async (req, res) => {
         console.error('Error creating order:', error.message);
         res.status(500).json({ message: 'Failed to create order' });
     }
+    
 };
 // Get order by ID
 exports.getOrderById = async (req, res) => {

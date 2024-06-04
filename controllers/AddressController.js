@@ -2,6 +2,10 @@ const addressModel = require('../models/Address');
 
 // Create a new address
 exports.createAddress = async (req, res) => {
+  const {address1, city,state, country, } = req.body; 
+  if(!address1 || !city || !state || !country ){
+    return res.status(400).json({message : "address1, city, state, and conutry are required"})
+  }
   try {
     const addressData = req.body;
     const result = await addressModel.createAddress(addressData);
