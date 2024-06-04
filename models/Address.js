@@ -3,7 +3,7 @@ const { pool } = require('../config/data'); // Import the pool
 class Address {
   async createAddress(addressData) {
     try {
-      const query = `INSERT INTO Addresses (Address1, Address2, City, State, PostalCode, Country, ClientId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO Addresses (address1, address2, city, state, postalCode, country, clientId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
       const [result] = await pool.promise().query(query, [
         addressData.Address1,
         addressData.Address2,

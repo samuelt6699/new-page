@@ -12,7 +12,7 @@ exports.createAddress = async (req, res) => {
     res.status(201).json({ message: 'Address created successfully', addressId: result });
   } catch (error) {
     console.error('Error creating address:', error);
-    res.status(500).json({ message: 'Failed to create address' });
+    res.status(500).json({ message: 'Failed to create address' ,error });
   }
 };
 
