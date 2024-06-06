@@ -2,7 +2,7 @@ const addressModel = require('../models/Address');
 
 // Create a new address
 exports.createAddress = async (req, res) => {
-  const { address1, city, state, country, postalCode, clientId } = req.body;
+  const { address1, address2, city, state, country, postalCode, clientId } = req.body;
   if (!address1 || !city || !state || !country || !clientId) {
     return res.status(400).json({ message: 'address1, city, state, country, and clientId are required' });
   }
@@ -12,7 +12,7 @@ exports.createAddress = async (req, res) => {
     res.status(201).json({ message: 'Address created successfully', addressId: result });
   } catch (error) {
     console.error('Error creating address:', error);
-    res.status(500).json({ message: 'Failed to create address' ,error });
+    res.status(500).json({ message: 'Failed to create address', error });
   }
 };
 
