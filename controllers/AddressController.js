@@ -2,8 +2,8 @@ const addressModel = require('../models/Address');
 
 // Create a new address
 exports.createAddress = async (req, res) => {
-  const { Address1, Address2, city, state, country, postalCode, clientId } = req.body;
-  if (!Address1 || !city || !state || !country || !clientId) {
+  const { Address1, Address2, City, State, Country, PostalCode, ClientId } = req.body;
+  if (!Address1 || !City || !State || !Country || !ClientId) {
     return res.status(400).json({ message: 'address1, city, state, country, and clientId are required' });
   }
   try {
