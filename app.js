@@ -11,6 +11,7 @@ const cartItemRoute = require('./routes/cartItem');
 const searchRoute = require('./routes/search');
 const vendorRoutes= require("./routes/vendor");
 const addressRoutes = require('./routes/Address');
+const contactRoute = require('./routes/contact');
 // const advertiserRoutes= require("./routes/advertiser")
 // const advertisementRoutes= require("./routes/advertisement")
 // const adPlacementRoutes= require("./routes/adPlacement")
@@ -32,6 +33,7 @@ app.use("/api/order", orderRoutes);
 app.use('/api/address', addressRoutes);
 app.use("/api/cartItems", authenticateToken, cartItemRoute);
 app.use("/api/", searchRoute);
+app.use('/api/contact', contactRoute);
 // app.use("/api/advertiser", authenticateToken, advertiserRoutes);
 // app.use("/api/advertisement", authenticateToken, advertisementRoutes);
 // app.use("/api/ad_placement", authenticateToken, adPlacementRoutes);
