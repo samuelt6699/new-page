@@ -1,11 +1,27 @@
-// routes/contact.js
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+// Input validation function
+const validateInput = (name, email, message) => {
+  if (!name || !email || !message) {
+    return false;
+  }
+  // Simple email regex for basic validation, adjust as needed
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return false;
+  }
+  return true;
+};
+
 router.post('/send', (req, res) => {
   const { name, email, message } = req.body;
+
+  if (!validateInput(name, email, message)) {
+    return res.status(400).json({ status: 'fail', error: 'Invalid input data' });
+  }
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -16,7 +32,8 @@ router.post('/send', (req, res) => {
   });
 
   const mailOptions = {
-    from: email,
+    from: process.env.EMAIL_USER,
+    replyTo: email,
     to: 'softtechdynamics@gmail.com',
     subject: `Contact Us Form Submission from ${name}`,
     text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
@@ -24,9 +41,11 @@ router.post('/send', (req, res) => {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      return res.status(500).json({ status: 'fail', error: error.toString() });
+      console.error('Error sending email:', error);
+      return res.status(500).json({ status: 'fail', error: 'Internal Server Error' });
     }
-    res.status(200).json({ status: 'success', info });
+    console.log('Email sent: ' + info.response);
+    res.status(200).json({ status: 'success', info: info.response });
   });
 });
 
